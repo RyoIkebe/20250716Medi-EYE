@@ -1,0 +1,43 @@
+# ── メンテナンスモード：最上段 ──
+RewriteEngine On
+
+# maintenance.html そのものは除外
+RewriteCond %{REQUEST_URI} !^/maintenance\.html$
+
+# ▼ 追加：いまリクエストされたパスが実ファイルなら除外
+RewriteCond %{REQUEST_FILENAME} !-f
+
+# 静的リソース除外（必要に応じて拡張子を追加）
+RewriteCond %{REQUEST_URI} !\.(css|js|png|jpe?g|gif|ico)$
+
+# 本番閲覧したい自分の IP を許可する場合（任意）
+#RewriteCond %{REMOTE_ADDR} !^123\.45\.67\.89$
+
+# maintenance.html へ 302 リダイレクト
+RewriteRule ^.*$ /maintenance.html [R=302,L]
+
+#---------------------------------
+# 2) 既存のリダイレクト設定
+#---------------------------------
+# www あり→なし
+RewriteCond %{HTTP_HOST} ^www.medi-lx.co.jp
+RewriteRule ^(.*)$ https://medi-lx.co.jp/$1 [R=301,L]
+
+# HTTP→HTTPS（Forwarded-Proto 対応）
+RewriteCond %{HTTP_HOST} ^medi-lx\.co\.jp$
+RewriteCond %{HTTPS} !=on
+RewriteCond %{HTTP:X-Forwarded-Proto} !=https
+RewriteRule ^/?(.*) https://%{HTTP_HOST}/$1 [R=301,L]
+
+#---------------------------------
+# 3) 通常時のルーティング
+#---------------------------------
+# 物理ファイル/ディレクトリが無ければ index.php
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . index.php
+
+# mp4 再生
+AddType video/mp4 .mp4
+
+
