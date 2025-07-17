@@ -11,7 +11,7 @@ RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_URI} !\.(css|js|png|jpe?g|gif|ico)$
 
 # 本番閲覧したい自分の IP を許可する場合（任意）
-#RewriteCond %{REMOTE_ADDR} !^123\.45\.67\.89$
+#RewriteCond %{REMOTE_ADDR} !^121\.85\.125\.91$
 
 # maintenance.html へ 302 リダイレクト
 RewriteRule ^.*$ /maintenance.html [R=302,L]
